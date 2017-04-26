@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PayLibrary</string>
+    <string name="wechat_not_install">请先安装微信客户端，才可支付</string>
+    <string name="wechat_pay_not_support">当前微信版本不支持支付功能，请升级</string>
+</resources>

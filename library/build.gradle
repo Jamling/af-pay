@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion Integer.parseInt(SDK_COMPILE)
+    buildToolsVersion SDK_BUILD
+
+    useLibrary('org.apache.http.legacy')
+    defaultConfig {
+        minSdkVersion Integer.parseInt(SDK_MIN)
+        targetSdkVersion Integer.parseInt(SDK_TARGET)
+        versionCode 1
+        versionName "1.0"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // compile fileTree(include: ['*.jar'], dir: 'libs')
+    // just compile
+    //provided files('libs/libammsdk.jar');
+    //provided files('libs/alipaySdk-20161222.jar')
+    //
+    compile files('libs/libammsdk.jar');
+    compile files('libs/alipaySdk-20161222.jar')
+}
