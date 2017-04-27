@@ -11,5 +11,5 @@ android:
     - extra-android-m2repository
     - extra-google-m2repository
   
-script: gradle sample:assembleRelease
+script: ./gradlew app:assembleRelease
 
