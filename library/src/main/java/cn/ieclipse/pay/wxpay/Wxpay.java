@@ -246,7 +246,7 @@ public class Wxpay {
         //-----------> Response
 
         protected String getResponse(String url, String body) {
-            byte[] buf = Util.httpPost(url, body);
+            byte[] buf = HttpsUtils.post(url, body);
             return new String(buf);
         }
     }
