@@ -2,6 +2,12 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/gradle/caches/
+    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
+    - ${TRAVIS_BUILD_DIR}/android-sdk/extras/
+
 android:
   components:
     - platform-tools
