@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 HongTu
+ * Copyright (C) 2015-2017 QuickAF
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,11 @@ package cn.ieclipse.pay.wxpay;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-
-import cn.ieclipse.pay.R;
 
 /**
  * Description
