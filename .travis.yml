@@ -17,5 +17,5 @@ android:
     - extra-android-m2repository
     - extra-google-m2repository
   
-script: ./gradlew app:assembleRelease
+script: ./gradlew check
 
