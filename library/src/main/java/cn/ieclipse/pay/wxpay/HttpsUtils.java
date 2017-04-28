@@ -3,6 +3,8 @@ package cn.ieclipse.pay.wxpay;
 import android.text.TextUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,15 +37,15 @@ public abstract class HttpsUtils {
             }
             
             connection.setDoOutput(true);
-            OutputStream sos = connection.getOutputStream();
-            sos.write(body.getBytes());
-            sos.flush();
-            sos.close();
+            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+            out.write(body.getBytes());
+            out.close();
             int code = connection.getResponseCode();
             
             if (code == HttpURLConnection.HTTP_OK) {
+                DataInputStream in = new DataInputStream(connection.getInputStream());
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                copyStream(connection.getInputStream(), bos);
+                copyStream(in, bos);
                 connection.getInputStream().close();
                 byte[] data = bos.toByteArray();
                 bos.close();
