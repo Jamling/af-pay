@@ -234,7 +234,7 @@ public class Wxpay {
             sb.append("</xml>");
             String xml = "";
             try {
-                xml = new String(sb.toString().getBytes(), "ISO8859-1");
+                xml = new String(sb.toString().getBytes(), "UTF-8");
             } catch (Exception e) {
                 if (Wxpay.DEBUG) {
                     Wxpay.log(e.getMessage());
@@ -247,6 +247,9 @@ public class Wxpay {
 
         protected String getResponse(String url, String body) {
             byte[] buf = HttpsUtils.post(url, body);
+            if (buf == null) {
+                return "";
+            }
             return new String(buf);
         }
     }
