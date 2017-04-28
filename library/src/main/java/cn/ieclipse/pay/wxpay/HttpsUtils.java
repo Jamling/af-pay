@@ -35,7 +35,7 @@ public abstract class HttpsUtils {
             if (connection instanceof HttpsURLConnection) {
                 initHttps((HttpsURLConnection) connection, null);
             }
-            
+            connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             DataOutputStream out = new DataOutputStream(connection.getOutputStream());
             out.write(body.getBytes());
@@ -46,7 +46,7 @@ public abstract class HttpsUtils {
                 DataInputStream in = new DataInputStream(connection.getInputStream());
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 copyStream(in, bos);
-                connection.getInputStream().close();
+                in.close();
                 byte[] data = bos.toByteArray();
                 bos.close();
                 return data;
