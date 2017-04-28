@@ -17,5 +17,5 @@ android:
     - extra-android-m2repository
     - extra-google-m2repository
   
-script: ./gradlew check
+script: ./gradlew library:check
 
