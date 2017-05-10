@@ -155,5 +155,6 @@ Af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件�
 - 如果项目中已经包含或依赖的第三方库中已包含libammsdk.jar（微信sdk），在引入af-pay后，出现因jar版本不致导致编译不通过，建议引入`pure`分支版本。
 - af-pay原来是包含在[QuickAF]中，建议使用[QuickAF]的同学们更新依赖。
 - 日志tag为`pay_sdk`，可以设置`Wxpay.DEUBG = true`或`Alipay.DEUBG = true`来开启日志。
+- 更多请加入![QQ群: 629153672](http://dl.ieclipse.cn/screenshots/quickaf_group.png)
 
 [QuickAF]: https://github.com/Jamling/QuickAF
