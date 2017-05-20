@@ -32,7 +32,7 @@ android {
 }
 
 ext {
-    pure = project.hasProperty('pure') ? project.property('pure') : false
+    pure = project.hasProperty('pure') ? project.property('pure') : true
     artifactId = pure ? "af-pay-pure" : 'af-pay'
     groupId = 'cn.ieclipse.af'
 }
