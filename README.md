@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/Jamling/af-pay.svg?branch=master)](https://travis-ci.org/Jamling/af-pay)
 [![GitHub release](https://img.shields.io/github/release/jamling/af-pay.svg?maxAge=3600)](https://github.com/Jamling/af-pay)
 [![Bintray](https://img.shields.io/bintray/v/jamling/maven/af-pay.svg?maxAge=86400)](https://bintray.com/jamling/maven/af-pay)
+[![Jitpack](https://jitpack.io/v/Jamling/af-pay.svg)](https://jitpack.io/#Jamling/af-pay)
 
 Af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件，现已抽取出来作为一个单独的Android支付库, 支持支付宝，微信支付，并且同时支持客户端下单与服务端下单。
 
