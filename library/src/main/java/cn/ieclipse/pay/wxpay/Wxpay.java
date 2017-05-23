@@ -80,7 +80,10 @@ public class Wxpay {
             mWXApi.sendReq(req);
         }
         else {
-            if (payListener != null ) {
+            if (Wxpay.DEBUG) {
+                Wxpay.log("您的微信版本太低或不支持支付");
+            }
+            if (payListener != null) {
                 PayResp resp = new PayResp();
                 resp.errCode = BaseResp.ErrCode.ERR_UNSUPPORT;
                 payListener.onPayFailure(resp);
@@ -97,6 +100,14 @@ public class Wxpay {
 
     public void onResp(BaseResp baseResp) {
         int code = baseResp.errCode;
+        if (Wxpay.DEBUG) {
+            Wxpay.log(String.format("支付返回errCode=%d,errStr=%s", code, baseResp.errStr));
+            if (baseResp instanceof PayResp) {
+                PayResp resp = (PayResp) baseResp;
+                Wxpay.log(String.format("returnKey=%s,prepayId=%s,extDate=%s,transaction=%s,openId=%s", resp.returnKey,
+                    resp.prepayId, resp.extData, resp.transaction, resp.openId));
+            }
+        }
         if (payListener != null) {
             if (code == BaseResp.ErrCode.ERR_OK) {
                 payListener.onPaySuccess(baseResp);

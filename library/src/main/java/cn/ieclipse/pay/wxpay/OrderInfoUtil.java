@@ -20,10 +20,12 @@ import android.util.Xml;
 
 import com.tencent.mm.sdk.modelpay.PayReq;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +81,29 @@ public abstract class OrderInfoUtil {
             }
             return xml;
         } catch (Exception e) {
+            if (Wxpay.DEBUG) {
+                Wxpay.log("无法从xml中解析统一下单信息：" + e.toString());
+            }
+        }
+        return null;
+    }
+
+    public static Map<String, String> parseJsonResponse(String content) {
+        try {
+            JSONObject object = new JSONObject(content);
+            Map<String, String> map = new HashMap<>();
+            Iterator<String> keys = object.keys();
+            if (keys != null) {
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    map.put(key, object.getString(key));
+                }
+            }
+            return map;
+        } catch (Exception e) {
+            if (Wxpay.DEBUG) {
+                Wxpay.log("无法从json中解析统一下单信息：" + e.toString());
+            }
         }
         return null;
     }
@@ -102,7 +127,7 @@ public abstract class OrderInfoUtil {
             req.prepayId = result.get("prepay_id");
             req.timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
             req.sign = result.get("sign");
-            
+
             Map<String, String> sortedMap = new TreeMap<>();
             sortedMap.put("appid", req.appId);
             sortedMap.put("noncestr", req.nonceStr);
@@ -130,7 +155,7 @@ public abstract class OrderInfoUtil {
         Map<String, String> result = OrderInfoUtil.parseXmlResponse(xmlResultContent);
         return getPayReq(result);
     }
-    
+
     /**
      * Sample :
      * <xml>
@@ -176,14 +201,14 @@ public abstract class OrderInfoUtil {
         String str = String.valueOf(new java.util.Random().nextDouble());
         return MD5.getMessageDigest(str.getBytes());
     }
-    
+
     public static String genSign(Map<String, String> parameters) {
         // see https://pay.weixin.qq.com/wiki/tools/signverify/
         Map<String, String> sortedMap = new TreeMap<>();
         for (String key : parameters.keySet()) {
             sortedMap.put(key, parameters.get(key));
         }
-        
+
         StringBuffer sb = new StringBuffer();
         Set<String> es = sortedMap.keySet();
         for (String k : es) {
