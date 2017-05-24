@@ -41,13 +41,16 @@ ext {
 }
 
 dependencies {
-    if (pure)
+    if (pure) {
         provided fileTree(include: ['*.jar'], dir: 'libs')
-    else
+        provided 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    } else {
         compile fileTree(include: ['*.jar'], dir: 'libs')
+        compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    }
 }
 
-tasks.withType(org.gradle.api.tasks.javadoc.Javadoc){
+tasks.withType(org.gradle.api.tasks.javadoc.Javadoc) {
     options {
         links "http://docs.oracle.com/javase/7/docs/api/"
         linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
@@ -60,17 +63,18 @@ tasks.withType(org.gradle.api.tasks.javadoc.Javadoc){
     }
 }
 
+// ./gradlew clean library:build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
 publish {
     userOrg = 'jamling'
     groupId = 'cn.ieclipse.af'
     artifactId = pure ? "af-pay-pure" : 'af-pay'
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
     desc = 'An Android pay sdk'
     website = 'https://github.com/Jamling/af-pay'
     bintrayUser = 'jamling'
     bintrayKey = '832bbe2d2e86f4644c948dc82aa69cc4fa30c16f'
     dryRun = true
 }
-task hello(){
-    println (pure)
+task hello() {
+    println(pure)
 }

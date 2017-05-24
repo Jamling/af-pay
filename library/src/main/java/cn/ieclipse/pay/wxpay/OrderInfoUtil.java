@@ -18,7 +18,7 @@ package cn.ieclipse.pay.wxpay;
 import android.text.TextUtils;
 import android.util.Xml;
 
-import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
@@ -109,7 +109,7 @@ public abstract class OrderInfoUtil {
     }
 
     /**
-     * Get {@link com.tencent.mm.sdk.modelpay.PayReq} from order map result.
+     * Get {@link com.tencent.mm.opensdk.modelpay.PayReq} from order map result.
      *
      * @param result order result map
      *
@@ -127,25 +127,34 @@ public abstract class OrderInfoUtil {
             req.prepayId = result.get("prepay_id");
             req.timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
             req.sign = result.get("sign");
-
-            Map<String, String> sortedMap = new TreeMap<>();
-            sortedMap.put("appid", req.appId);
-            sortedMap.put("noncestr", req.nonceStr);
-            sortedMap.put("partnerid", req.partnerId);
-            sortedMap.put("prepayid", req.prepayId);
-            sortedMap.put("timestamp", req.timeStamp);
-            sortedMap.put("package", req.packageValue);
-            String sign = OrderInfoUtil.genSign(sortedMap);
-            if (Wxpay.DEBUG) {
-                Wxpay.log("客户端支付签名：" + sign);
-            }
-            req.sign = sign;
+            signPayReq(req);
         }
         return req;
     }
 
     /**
-     * Get {@link com.tencent.mm.sdk.modelpay.PayReq} from order xml result.
+     * 重新签名，当客户端下单的时候，统一订单接口并未返回timestamp，加上timestamp后，需要重新签名。
+     * 如果是服务端下单，如果服务端已经重新生成了签名，那么无需客户端重新签名，直接拿PayReq对象去支付就可以了。
+     *
+     * @param req 将要调用微信客户端
+     */
+    public static void signPayReq(PayReq req) {
+        Map<String, String> sortedMap = new TreeMap<>();
+        sortedMap.put("appid", req.appId);
+        sortedMap.put("noncestr", req.nonceStr);
+        sortedMap.put("partnerid", req.partnerId);
+        sortedMap.put("prepayid", req.prepayId);
+        sortedMap.put("timestamp", req.timeStamp);
+        sortedMap.put("package", req.packageValue);
+        String sign = OrderInfoUtil.genSign(sortedMap);
+        if (Wxpay.DEBUG) {
+            Wxpay.log("客户端支付重签名：" + sign);
+        }
+        req.sign = sign;
+    }
+
+    /**
+     * Get {@link com.tencent.mm.opensdk.modelpay.PayReq} from order xml result.
      *
      * @param xmlResultContent order result xml content
      *
