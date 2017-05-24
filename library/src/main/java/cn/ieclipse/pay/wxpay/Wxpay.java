@@ -23,13 +23,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.tencent.mm.sdk.constants.Build;
-import com.tencent.mm.sdk.modelbase.BaseResp;
-import com.tencent.mm.sdk.modelpay.PayReq;
-import com.tencent.mm.sdk.modelpay.PayResp;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.constants.Build;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.modelpay.PayResp;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -245,7 +245,9 @@ public class Wxpay {
             sb.append("</xml>");
             String xml = "";
             try {
-                xml = new String(sb.toString().getBytes(), "UTF-8");
+                // 使用HttpClient，需设置ISO-8859-1编码
+                // xml = new String(sb.toString().getBytes(), "UTF-8");
+                xml = sb.toString();
             } catch (Exception e) {
                 if (Wxpay.DEBUG) {
                     Wxpay.log(e.getMessage());

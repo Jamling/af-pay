@@ -4,11 +4,13 @@
 [![Bintray](https://img.shields.io/bintray/v/jamling/maven/af-pay.svg?maxAge=86400)](https://bintray.com/jamling/maven/af-pay)
 [![Jitpack](https://jitpack.io/v/Jamling/af-pay.svg)](https://jitpack.io/#Jamling/af-pay)
 
-Af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件，现已抽取出来作为一个单独的Android支付库, 支持支付宝，微信支付，并且同时支持客户端下单与服务端下单。
+af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件，现已抽取出来作为一个单独的Android支付库, 支持支付宝，微信支付，并且同时支持客户端下单与服务端下单。
+af-pay有两个版本
+- 完整版本：包含支付宝等支付平台的依赖jar
+- 纯净版本：*不*包含支付宝等支付平台的依赖jar，以避免和其它库（如友盟分享库）冲突，需要你自己引入相关的jar，否则运行时将crash。
 
-## 引入
-**注：如果不想引入支付依赖的jar，请使用`pure`分支或版本**
-
+## 在gradle中引入
+**再次提醒：如果不想引入支付依赖的jar，请使用`pure`分支或版本**
 *`pure`版本不包含任何支付平台的相关jar包，如果您的工程中原来已经包含了如微信分享（libammsdk.jar）jar，则会出现冲突，导致打包失败。建议引入纯净版*
 
 ### 在Android中直接使用
@@ -16,19 +18,19 @@ Af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件�
 - 引入完整版本，包含支付平台相关的jar包
 ```gradle
     dependencies {
-        compile 'cn.ieclipse.af:af-pay:0.0.1'
+        compile 'cn.ieclipse.af:af-pay:0.0.2'
     }
 ```
 - 引入纯净版本
 ```gradle
     dependencies {
-        compile 'cn.ieclipse.af:af-pay-pure:0.0.1'
+        compile 'cn.ieclipse.af:af-pay-pure:0.0.2'
     }
 ```
 
 ### 使用jitpack.io仓库
 
-1，要工程根目录中的build.gradle中添加jitpack仓库
+1，在工程根目录中的build.gradle中添加jitpack仓库
 
 ```gradle
     allprojects {
@@ -112,50 +114,60 @@ Af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件�
 
 ### 微信支付
 ```java
-    private void doWxpay(String orderInfo) {
-        final Activity activity = this;
-        Wxpay wxpay = Wxpay.getInstance(activity);
-        wxpay.setPayListener(new cn.ieclipse.pay.wxpay.Wxpay.PayListener() {
-            @Override
-            public void onPaySuccess(BaseResp resp) {
-                showToast(activity, "支付成功：" + resp.errStr);
-            }
-            
-            @Override
-            public void onPayCanceled(BaseResp resp) {
-                showToast(activity, "支付取消");
-            }
-            
-            @Override
-            public void onPayFailure(BaseResp resp) {
-                showToast(activity, "支付失败：" + resp.errStr);
-            }
-        });
-        if (!TextUtils.isEmpty(orderInfo)) {
-            PayReq req = OrderInfoUtil.getPayReq(orderInfo);
-            wxpay.pay(req);
+private void doWxpay(String orderInfo) {
+    final Activity activity = this;
+    // 获取支付类
+    Wxpay wxpay = Wxpay.getInstance(activity);
+    // 设置支付回调监听
+    wxpay.setPayListener(new Wxpay.PayListener() {
+        @Override
+        public void onPaySuccess(BaseResp resp) {
+            showToast(activity, "支付成功");
         }
-        else {
-            Wxpay.DEBUG = true;
-            Wxpay.Config.api_key = "";
-            Wxpay.Config.app_id = "";
-            Wxpay.Config.mch_id = "";
-            Wxpay.Config.notify_url = "app/pay/wxpay_notify.do";
-            
-            Wxpay.DefaultOrderTask task = new Wxpay.DefaultOrderTask(wxpay);
-            String trans_order_id = OrderInfoUtil2_0.genOutTradeNo();
-            task.setParams(OrderInfoUtil.buildOrderParamMap(trans_order_id, "测试支付", "", "1", null, null, null));
-            task.execute();
+
+        @Override
+        public void onPayCanceled(BaseResp resp) {
+            showToast(activity, "支付取消");
         }
+
+        @Override
+        public void onPayFailure(BaseResp resp) {
+            showToast(activity, "支付失败");
+        }
+    });
+    // 这里是服务端下单，内容是统一下单返回的xml
+    if (!TextUtils.isEmpty(orderInfo)) {
+        PayReq req = OrderInfoUtil.getPayReq(orderInfo);
+        wxpay.pay(req);
     }
+    else { // 客户端下单
+        Wxpay.DEBUG = true; // 开启日志
+        // API密钥，在微信商户平台设置
+        Wxpay.Config.api_key = "32位的字串";
+        // APPID，在微信开放平台创建应用后生成
+        Wxpay.Config.app_id = "wx...";
+        // 商户ID，注册商户平台后生成
+        Wxpay.Config.mch_id = "14...";
+        // 支付结果异步通知接口，由后台开发提供
+        Wxpay.Config.notify_url = "http://www.ieclipse.cn/app/pay/wxpay_notify.do";
+        // 创建统一下单异步任务
+        Wxpay.DefaultOrderTask task = new Wxpay.DefaultOrderTask(wxpay);
+        // 这个商户订单号，由后台返回，在这里随便生成一个
+        String outTradeNo = OrderInfoUtil2_0.genOutTradeNo();
+        // 设置统一下单的请求参数
+        task.setParams(OrderInfoUtil.buildOrderParamMap(outTradeNo, "测试支付", "", "1", null, null, null));
+        task.execute();
+    }
+}
 ```
 
 ## 说明
 
-- 因本demo未申请支付宝支付和微信支付，所以在demo中无法支付成功。
+- 因本demo未申请支付宝支付和微信支付，所以在示例中无法支付成功。
 - 如果项目中已经包含或依赖的第三方库中已包含libammsdk.jar（微信sdk），在引入af-pay后，出现因jar版本不致导致编译不通过，建议引入`pure`分支版本。
 - af-pay原来是包含在[QuickAF]中，建议使用[QuickAF]的同学们更新依赖。
 - 日志tag为`pay_sdk`，可以设置`Wxpay.DEUBG = true`或`Alipay.DEUBG = true`来开启日志。
 - 更多请加入![QQ群: 629153672](http://dl.ieclipse.cn/screenshots/quickaf_group.png)
+- 0.0.2版本，微信依赖改为`com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+`
 
 [QuickAF]: https://github.com/Jamling/QuickAF
