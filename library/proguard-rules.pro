@@ -15,3 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class com.tencent.mm.opensdk.** {
+   *;
+}
+
+-keep class com.tencent.wxop.** {
+   *;
+}
+
+-keep class com.tencent.mm.sdk.** {
+   *;
+}
