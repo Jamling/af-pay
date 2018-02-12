@@ -15,7 +15,8 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            tools:replace="configChanges,exported,screenOrientation,windowSoftInputMode">
         </activity>
         <activity
             android:name="com.alipay.sdk.app.H5AuthActivity"
