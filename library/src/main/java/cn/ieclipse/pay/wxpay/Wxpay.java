@@ -15,8 +15,8 @@
  */
 package cn.ieclipse.pay.wxpay;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -44,7 +44,7 @@ public class Wxpay {
     public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     public static boolean DEBUG = false;
     public static final String TAG = "pay_sdk";
-    private Activity context;
+    private Context context;
     private IWXAPI mWXApi;
     private static Wxpay instance;
 
@@ -52,18 +52,43 @@ public class Wxpay {
         Log.v(TAG, msg);
     }
 
-    private Wxpay(Activity context) {
+    private Wxpay(Context context, String appId, boolean checkSignature) {
         this.context = context;
+        if (!TextUtils.isEmpty(appId)) {
+            Config.app_id = appId;
+        }
+
+        if (Wxpay.Config.checkSignature != checkSignature) {
+            Wxpay.Config.checkSignature = checkSignature;
+        }
+
         if (mWXApi == null) {
-            mWXApi = WXAPIFactory.createWXAPI(context, Config.app_id);
+            mWXApi = WXAPIFactory.createWXAPI(context, Config.app_id, Wxpay.Config.checkSignature);
             mWXApi.registerApp(Config.app_id);
         }
     }
 
-    public static Wxpay getInstance(Activity context) {
+    /**
+     * Suggestion called in {@link android.app.Application#onCreate()}
+     *
+     * @param context        Context
+     * @param appId          APP_ID register
+     * @param checkSignature checkSignature
+     *
+     * @see com.tencent.mm.opensdk.openapi.WXAPIFactory#createWXAPI(android.content.Context, String, boolean)
+     * @since 0.0.3
+     */
+    public static void init(Context context, String appId, boolean checkSignature) {
         if (instance == null) {
-            instance = new Wxpay(context);
+            instance = new Wxpay(context, appId, checkSignature);
         }
+    }
+
+    public static Wxpay getInstance(Context context) {
+        if (instance == null) {
+            instance = new Wxpay(context, Wxpay.Config.app_id, Wxpay.Config.checkSignature);
+        }
+        instance.context = context;
         return instance;
     }
 
@@ -137,9 +162,16 @@ public class Wxpay {
 
     public static class Config {
         /**
-         * 微信appid
+         * 微信appid，建议在 {@link android.app.Application#onCreate()}中设置
          */
         public static String app_id;
+
+        /**
+         * 是否检查签名，新版本的微信默认将检查签名改为了true
+         *
+         * @since 0.0.3
+         */
+        public static boolean checkSignature = false;
         /**
          * 商户号
          */

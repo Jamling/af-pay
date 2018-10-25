@@ -117,9 +117,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void doWxpay(String orderInfo) {
         final Activity activity = this;
-        // 获取支付类
+        Wxpay.DEBUG = true; // 开启日志
+        Wxpay.Config.checkSignature = false; // 0.0.3版本，微信SDK将此参数默认值改为了true，不过本sdk仍然使用默认的false
+        Wxpay.Config.app_id = "";
+        // step 1: 初始化, 推荐在Application#onCreate()方法中初始化
+        Wxpay.init(activity, Wxpay.Config.app_id, Wxpay.Config.checkSignature);
+
+        // step 2: 获取支付类
         Wxpay wxpay = Wxpay.getInstance(activity);
-        // 设置支付回调监听
+        // step 3: 设置支付回调监听
         wxpay.setPayListener(new Wxpay.PayListener() {
             @Override
             public void onPaySuccess(BaseResp resp) {
@@ -136,18 +142,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 showToast(activity, "支付失败");
             }
         });
+        // step 4: 调用支付
         // 这里是服务端下单，内容是统一下单返回的xml
         if (!TextUtils.isEmpty(orderInfo)) {
             PayReq req = OrderInfoUtil.getPayReq(orderInfo);
             wxpay.pay(req);
+            // TODO 如果服务端下单，但是返回的是json，需要自己生成一个PayReq对象。
         }
-        else { // 客户端下单
-            Wxpay.DEBUG = true; // 开启日志
+        else { // 客户端下单，需要补全Wxpay.Config中的其它参数
             // API密钥，在微信商户平台设置
             Wxpay.Config.api_key = "";
             // APPID，在微信开放平台创建应用后生成
             Wxpay.Config.app_id = "";
             // 商户ID，注册商户平台后生成
+            Wxpay.Config.mch_id = "";
+            Wxpay.Config.api_key = "";
+            Wxpay.Config.app_id = "";
             Wxpay.Config.mch_id = "";
             // 支付结果异步通知接口，由后台开发提供
             Wxpay.Config.notify_url = "http://www.ieclipse.cn/app/pay/wxpay_notify.do";

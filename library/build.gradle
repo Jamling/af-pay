@@ -43,10 +43,10 @@ ext {
 dependencies {
     if (pure) {
         provided fileTree(include: ['*.jar'], dir: 'libs')
-        provided 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+        provided 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.1.6'
     } else {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+        compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.1.6'
     }
 }
 
