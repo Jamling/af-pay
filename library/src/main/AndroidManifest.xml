@@ -9,24 +9,7 @@
         android:supportsRtl="true">
 
         <!-- 支付宝 -->
-        <!-- alipay sdk begin -->
-        <activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            tools:replace="configChanges,exported,screenOrientation,windowSoftInputMode">
-        </activity>
-        <activity
-            android:name="com.alipay.sdk.app.H5AuthActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            tools:replace="configChanges,exported,screenOrientation,windowSoftInputMode">
-        </activity>
-        <!-- alipay sdk end -->
+        <!-- alipay sdk include component config -->
 
         <!-- 微信 -->
         <receiver

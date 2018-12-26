@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Wxpay.Config.checkSignature = false; // 0.0.3版本，微信SDK将此参数默认值改为了true，不过本sdk仍然使用默认的false
         Wxpay.Config.app_id = "";
         // step 1: 初始化, 推荐在Application#onCreate()方法中初始化
-        Wxpay.init(activity, Wxpay.Config.app_id, Wxpay.Config.checkSignature);
+        Wxpay.init(getApplicationContext(), Wxpay.Config.app_id, Wxpay.Config.checkSignature);
 
         // step 2: 获取支付类
         Wxpay wxpay = Wxpay.getInstance(activity);
