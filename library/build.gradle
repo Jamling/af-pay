@@ -70,7 +70,7 @@ publish {
     userOrg = 'jamling'
     groupId = 'cn.ieclipse.af'
     artifactId = pure ? "af-pay-pure" : 'af-pay'
-    publishVersion = '0.0.2'
+    publishVersion = '0.1.0'
     desc = 'An Android pay sdk'
     website = 'https://github.com/Jamling/af-pay'
     bintrayUser = 'jamling'
