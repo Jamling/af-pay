@@ -215,7 +215,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 showToast(activity, "支付失败");
             }
         });
-        if (!TextUtils.isEmpty(orderInfo)) {
+        if (!TextUtils.isEmpty(orderInfo)) {// 正式环境
             unionPay.pay(orderInfo, "00");
         }
         else {
@@ -223,7 +223,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 @Override
                 protected void onPostExecute(String result) {
                     super.onPostExecute(result);
-                    unionPay.pay(result, "01");
+                    unionPay.pay(result, "01"); // 测试
                 }
             };
             tnTask.execute();
