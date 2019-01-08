@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('debug.keystore')
+            storePassword 'android'
+        }
+    }
+    compileSdkVersion Integer.parseInt(SDK_COMPILE)
+    buildToolsVersion SDK_BUILD
+    defaultConfig {
+        applicationId 'net.sourceforge.simcpux'
+        minSdkVersion Integer.parseInt(SDK_MIN)
+        targetSdkVersion Integer.parseInt(SDK_TARGET)
+        versionName VER_NAME
+        versionCode Integer.parseInt(VER_CODE)
+        signingConfig signingConfigs.config
+    }
+    useLibrary('org.apache.http.legacy')
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def oldFile = output.outputFile
+            def releaseApkName = APP_NAME + VER_NAME + '(' + VER_CODE + ')-' +
+                    variant.buildType.name + '.apk'
+            output.outputFile = new File(oldFile.parent, releaseApkName)
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+    productFlavors {
+    }
+    packagingOptions {
+        exclude ''
+    }
+    // Flag to tell aapt to keep the attribute ids around
+    aaptOptions {
+        //additionalParameters "--no-version-vectors"
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':library')
+}
