@@ -6,7 +6,7 @@
 
 af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件，现已抽取出来作为一个单独的Android支付库, 支持支付宝，微信支付，并且同时支持客户端下单与服务端下单。
 
-0.2.0及其以上版本支付银联支付，如需使用银联支付，[请点击这里](unipay.md)。
+0.2.0及其以上版本支付银联支付，如需使用银联支付，[请点击这里](unionpay.md)。
 
 新的版本（0.1.0及其以上）没有提供纯净版，如果您使用的是0.1以下版本，请移步[旧文档](README_old.md)
 
@@ -15,7 +15,7 @@ af-pay原为[QuickAF]（一个快速的Android开发框架）中的支付组件�
 - 引入完整版本，包含支付平台相关的jar包
 ```gradle
     dependencies {
-        compile 'cn.ieclipse.af:af-pay:0.1.0'
+        compile 'cn.ieclipse.af:af-pay:0.2.0'
     }
 ```
 
