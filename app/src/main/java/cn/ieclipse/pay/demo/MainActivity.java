@@ -1,10 +1,10 @@
 package cn.ieclipse.pay.demo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,50 +17,74 @@ import java.util.Map;
 import cn.ieclipse.pay.alipay.Alipay;
 import cn.ieclipse.pay.alipay.OrderInfoUtil2_0;
 import cn.ieclipse.pay.alipay.PayResult;
+import static cn.ieclipse.pay.demo.R.id.tv1;
+import static cn.ieclipse.pay.demo.R.id.tv2;
+import static cn.ieclipse.pay.demo.R.id.tv3;
+import cn.ieclipse.pay.union.UnionPay;
 import cn.ieclipse.pay.wxpay.OrderInfoUtil;
 import cn.ieclipse.pay.wxpay.Wxpay;
 
 public class MainActivity extends Activity implements View.OnClickListener {
-    private TextView tv1;
-    private TextView tv2;
+    private TextView tv01;
+    private TextView tv02;
+    private TextView tv03;
     private EditText et1;
-    private Button tv3;
-    private Button tv4;
+    private TextView tv11;
+    private TextView tv12;
+    private TextView tv13;
+    private TextView btn1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv1 = (TextView) findViewById(R.id.tv1);
-        tv2 = (TextView) findViewById(R.id.tv2);
-        et1 = (EditText) findViewById(R.id.et1);
-        tv3 = (Button) findViewById(R.id.tv3);
-        tv4 = (Button) findViewById(R.id.tv4);
+        tv01 = findViewById(tv1);
+        tv02 = findViewById(tv2);
+        tv03 = findViewById(tv3);
+        et1 = findViewById(R.id.et1);
+        tv11 = findViewById(R.id.tv11);
+        tv12 = findViewById(R.id.tv12);
+        tv13 = findViewById(R.id.tv13);
+        btn1 = findViewById(R.id.btn1);
 
-        tv1.setOnClickListener(this);
-        tv2.setOnClickListener(this);
-        tv3.setOnClickListener(this);
-        tv4.setOnClickListener(this);
+        tv01.setOnClickListener(this);
+        tv02.setOnClickListener(this);
+        tv03.setOnClickListener(this);
+        tv11.setOnClickListener(this);
+        tv12.setOnClickListener(this);
+        tv13.setOnClickListener(this);
+        btn1.setOnClickListener(this);
 
         setTitle("支付示例");
     }
 
     @Override
     public void onClick(View v) {
-        if (v == tv1) {
+        if (v == tv01) {
             doAlipay(null);
         }
-        else if (v == tv2) {
+        else if (v == tv02) {
             doWxpay(null);
         }
-        else if (v == tv3) {
+        else if (v == tv11) {
             String info = et1.getText().toString().trim();
             doAlipay(info);
         }
-        else if (v == tv4) {
+        else if (v == tv12) {
             String info = et1.getText().toString().trim();
             doWxpay(info);
+        }
+        else if (v == tv03) {
+            String info = et1.getText().toString().trim();
+            doUnionPay(null);
+        }
+        else if (v == tv13) {
+            String info = et1.getText().toString().trim();
+            doUnionPay(info);
+        }
+        else if (v == btn1) {
+            startActivity(new Intent(this, ResourceActivity.class));
         }
     }
 
@@ -171,7 +195,61 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    private void doUnionPay(String orderInfo) {
+        final Activity activity = this;
+        UnionPay.DEBUG = true; // 开启日志
+        final UnionPay unionPay = UnionPay.getInstance(activity);
+        unionPay.setPayListener(new UnionPay.PayListener() {
+            @Override
+            public void onPaySuccess(cn.ieclipse.pay.union.PayResult payResult) {
+                showToast(activity, "支付成功");
+            }
+
+            @Override
+            public void onPayCancel(cn.ieclipse.pay.union.PayResult payResult) {
+                showToast(activity, "支付取消");
+            }
+
+            @Override
+            public void onPayFailure(cn.ieclipse.pay.union.PayResult payResult) {
+                showToast(activity, "支付失败");
+            }
+        });
+        if (!TextUtils.isEmpty(orderInfo)) {
+            unionPay.pay(orderInfo, "00");
+        }
+        else {
+            UnionPay.DefaultTnTask tnTask = new UnionPay.DefaultTnTask(unionPay) {
+                @Override
+                protected void onPostExecute(String result) {
+                    super.onPostExecute(result);
+                    unionPay.pay(result, "01");
+                }
+            };
+            tnTask.execute();
+        }
+    }
+
     private void showToast(Activity activity, String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
+
+    //-->
+    // 招商银行借记卡：6226090000000048
+    // 手机号：18100000000
+    // 密码：111101
+    // 短信验证码：123456（先点获取验证码之后再输入）
+    // 证件类型：01身份证
+    // 证件号：510265790128303
+    // 姓名：张三
+    //-->
+
+    //华夏银行贷记卡：6226388000000095
+    // 手机号：18100000000
+    // cvn2：248
+    // 有效期：1219
+    // 短信验证码：111111（先点获取验证码之后再输入）
+    // 证件类型：01身份证
+    // 证件号：510265790128303
+    // 姓名：张三
 }
