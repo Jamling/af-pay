@@ -34,6 +34,15 @@
             android:name="${applicationId}.wxapi.WXPayEntryActivity"
             android:targetActivity="cn.ieclipse.pay.wxpay.WXPayActivity"
             android:exported="true"/>
+
+        <!-- 银联支付 -->
+        <activity
+            android:name="cn.ieclipse.pay.union.UnionPayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="true"/>
     </application>
 
 </manifest>

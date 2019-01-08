@@ -41,7 +41,14 @@ import java.util.Set;
  * @author Jamling
  */
 public class Wxpay {
+    /**
+     * 统一下单URL
+     */
     public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    /**
+     * 测试环境下服务端下单，返回的是json
+     */
+    public static final String TEST_ORDER_URL = "https://wxpay.wxutil.com/pub_v2/app/app_pay.php";
     public static boolean DEBUG = false;
     public static final String TAG = "pay_sdk";
     private Context context;
