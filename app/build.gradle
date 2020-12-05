@@ -16,7 +16,7 @@ android {
             def oldFile = output.outputFile
             def releaseApkName = APP_NAME + VER_NAME + '(' + VER_CODE + ')-' +
                     variant.buildType.name + '.apk'
-            output.outputFile = new File(oldFile.parent, releaseApkName)
+            output.outputFileName = releaseApkName
         }
     }
     compileOptions {
